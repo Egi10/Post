@@ -1,4 +1,4 @@
-package id.buaja.post.ui
+package id.buaja.post.ui.home
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

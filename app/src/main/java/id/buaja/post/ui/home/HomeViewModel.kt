@@ -1,4 +1,4 @@
-package id.buaja.post.ui
+package id.buaja.post.ui.home
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -7,7 +7,7 @@ import androidx.lifecycle.viewModelScope
 import id.buaja.domain.Resource
 import id.buaja.domain.model.Post
 import id.buaja.domain.usecase.PostUseCase
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
@@ -15,7 +15,10 @@ import kotlinx.coroutines.launch
  * Created by Julsapargi Nursam on 3/23/21.
  */
 
-class HomeViewModel(private val postUseCase: PostUseCase) : ViewModel() {
+class HomeViewModel(
+    private val postUseCase: PostUseCase,
+    private val dispatcher: CoroutineDispatcher
+) : ViewModel() {
     private val _success = MutableLiveData<List<Post>>()
     val success: LiveData<List<Post>> get() = _success
 
@@ -30,7 +33,7 @@ class HomeViewModel(private val postUseCase: PostUseCase) : ViewModel() {
     }
 
     fun getPost() {
-        viewModelScope.launch(Dispatchers.Main) {
+        viewModelScope.launch(dispatcher) {
             postUseCase.getPost().collect {
                 when (it) {
                     is Resource.Loading -> {
@@ -41,7 +44,7 @@ class HomeViewModel(private val postUseCase: PostUseCase) : ViewModel() {
                         _loading.value = false
                         _success.postValue(it.data)
                     }
-                    
+
                     is Resource.Error -> {
                         _loading.value = false
                         _errorMessage.postValue(it.message)

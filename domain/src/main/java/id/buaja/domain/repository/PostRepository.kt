@@ -10,4 +10,5 @@ import kotlinx.coroutines.flow.Flow
 
 interface PostRepository {
     fun getPost(): Flow<Resource<List<Post>>>
+    fun getPostByTitle(title: String): Flow<List<Post>>
 }

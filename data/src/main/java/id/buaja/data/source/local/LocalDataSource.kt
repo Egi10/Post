@@ -5,7 +5,6 @@ import id.buaja.data.source.local.entity.PostEntity
 import id.buaja.data.source.local.room.PostDao
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -17,7 +16,7 @@ import javax.inject.Singleton
 @Singleton
 class LocalDataSource @Inject constructor(
     private val postDao: PostDao,
-    @IoDispatcher private val dispatcher: CoroutineDispatcher = Dispatchers.IO
+    @IoDispatcher private val dispatcher: CoroutineDispatcher
 ) {
     suspend fun insertPost(listPost: List<PostEntity>) {
         CoroutineScope(dispatcher).launch {
@@ -26,4 +25,5 @@ class LocalDataSource @Inject constructor(
     }
 
     fun getAllPost() = postDao.getAllPost()
+    fun getPostByTitle(title: String) = postDao.getPostByTitle(title)
 }

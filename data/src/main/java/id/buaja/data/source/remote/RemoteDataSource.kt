@@ -5,7 +5,6 @@ import id.buaja.data.source.remote.network.ApiResponse
 import id.buaja.data.source.remote.network.ApiService
 import id.buaja.data.source.remote.response.PostResponseItem
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
@@ -19,7 +18,7 @@ import javax.inject.Singleton
 @Singleton
 class RemoteDataSource @Inject constructor(
     private val apiService: ApiService,
-    @IoDispatcher private val dispatcher: CoroutineDispatcher = Dispatchers.IO
+    @IoDispatcher private val dispatcher: CoroutineDispatcher
 ) {
     suspend fun getPost(): Flow<ApiResponse<List<PostResponseItem>>> {
         return flow {

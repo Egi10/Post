@@ -21,21 +21,27 @@ import javax.inject.Singleton
 class PostRepositoryImpl @Inject constructor(
     private val remoteDataSource: RemoteDataSource,
     private val localDataSource: LocalDataSource
-): PostRepository {
-    override fun getPost(): Flow<Resource<List<Post>>> = object : NetworkBoundResource<List<Post>, List<PostResponseItem>>() {
-        override fun loadFromDB(): Flow<List<Post>> {
-            return localDataSource.getAllPost().map {
-                DataMapper.maoEntitiesToDomain(it)
+) : PostRepository {
+    override fun getPost(): Flow<Resource<List<Post>>> =
+        object : NetworkBoundResource<List<Post>, List<PostResponseItem>>() {
+            override fun loadFromDB(): Flow<List<Post>> {
+                return localDataSource.getAllPost().map {
+                    DataMapper.mapEntitiesToDomain(it)
+                }
             }
+
+            override fun shouldFetch(data: List<Post>?) = true
+
+            override suspend fun createCall() = remoteDataSource.getPost()
+
+            override suspend fun saveCallResult(data: List<PostResponseItem>) {
+                val postList = DataMapper.mapResponseToEntities(data)
+                localDataSource.insertPost(postList)
+            }
+        }.asFlow()
+
+    override fun getPostByTitle(title: String): Flow<List<Post>> =
+        localDataSource.getPostByTitle(title).map {
+            DataMapper.mapEntitiesToDomain(it)
         }
-
-        override fun shouldFetch(data: List<Post>?) = true
-
-        override suspend fun createCall() = remoteDataSource.getPost()
-
-        override suspend fun saveCallResult(data: List<PostResponseItem>) {
-            val postList = DataMapper.maoResponseToEntities(data)
-            localDataSource.insertPost(postList)
-        }
-    }.asFlow()
 }

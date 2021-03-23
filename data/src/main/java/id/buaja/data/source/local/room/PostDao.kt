@@ -18,4 +18,7 @@ interface PostDao {
 
     @Query("SELECT * FROM post")
     fun getAllPost(): Flow<List<PostEntity>>
+
+    @Query("SELECT * FROM post WHERE title = :title")
+    fun getPostByTitle(title: String): Flow<List<PostEntity>>
 }

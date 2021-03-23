@@ -9,7 +9,7 @@ import id.buaja.domain.model.Post
  */
 
 object DataMapper {
-    fun maoEntitiesToDomain(input: List<PostEntity>): List<Post> {
+    fun mapEntitiesToDomain(input: List<PostEntity>): List<Post> {
         val postEntity = ArrayList<Post>()
         input.map {
             val post = Post(
@@ -22,7 +22,7 @@ object DataMapper {
         return postEntity
     }
 
-    fun maoResponseToEntities(input: List<PostResponseItem>): List<PostEntity> {
+    fun mapResponseToEntities(input: List<PostResponseItem>): List<PostEntity> {
         val postEntity = ArrayList<PostEntity>()
         input.map {
             val post = PostEntity(
